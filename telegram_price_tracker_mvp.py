@@ -37,6 +37,13 @@ from telegram.ext import (
     filters
 )
 
+# Configure logging FIRST (before any imports that might fail)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
 # Add parent directory to path for scraper import
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
@@ -44,16 +51,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 try:
     from test_universal_parser_approach import UniversalExtractionTester
     SCRAPER_AVAILABLE = True
+    logger.info("Scraper module loaded successfully")
 except ImportError:
     SCRAPER_AVAILABLE = False
     logger.warning("Scraper module not available - product tracking disabled. This is normal for cloud deployment.")
-
-# Configure logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-logger = logging.getLogger(__name__)
 
 # Database setup
 DB_PATH = Path(__file__).parent / "price_tracker.db"
